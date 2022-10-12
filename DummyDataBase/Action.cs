@@ -1,12 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DummyDataBase
+﻿namespace DummyDataBase
 {
-    internal class Action
+    class Action
     {
+        public Book Book { get; }
+        public Reader Reader { get; }
+        public DateTime DateTake { get; }
+        public DateTime DateReturn { get; set; }    
+
+        public Action(Book book, Reader reader, DateTime dateTake)
+        {
+            Book = book;
+            Reader = reader;
+            DateTake = dateTake;
+        }
+        public Action(Book book, Reader reader, DateTime dateTake, DateTime dateReturn)
+        {
+            Book = book;
+            Reader = reader;
+            DateTake = dateTake;
+            DateReturn = dateReturn;
+        }
     }
 }

@@ -1,12 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DummyDataBase
+﻿namespace DummyDataBase
 {
-    internal class Reader
+    class Reader
     {
+        public int ID { get; }
+        public string FullName { get; set; }
+
+        public Reader(int iD, string fullName)
+        {
+            ID = iD;
+            FullName = fullName;
+        }
     }
 }
