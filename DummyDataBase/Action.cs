@@ -18,7 +18,7 @@
         }
         public void Print()
         {
-            Console.WriteLine("{0} {1} {2} {3} {4}", ID, Book, Reader, Date, TypeAction);
+            Console.WriteLine("{0} {1} {2} {3} {4}", ID, Book.Name, Reader.FullName, Date, TypeAction);
         }
     }
 }

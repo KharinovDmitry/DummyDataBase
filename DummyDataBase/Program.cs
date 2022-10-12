@@ -17,9 +17,15 @@ namespace DummyDataBase
 
             string bookJson = File.ReadAllText("./BookScheme.json");
             JsonTable tableBooks = JsonConvert.DeserializeObject<JsonTable>(bookJson);
+            string bookCsv = File.ReadAllText("./Data/Books.csv");
+            List<Book> books = CsvParser.ParseBooks(bookCsv, tableBooks);
 
             string actionJson = File.ReadAllText("./ActionScheme.json");
             JsonTable tableActions = JsonConvert.DeserializeObject<JsonTable>(actionJson);
+            string actionCsv = File.ReadAllText("./Data/Actions.csv");
+            List<Action> actions = CsvParser.ParseActions(actionCsv, tableActions, readers, books);
+            foreach (var action in actions)
+                action.Print();
 
 
 
