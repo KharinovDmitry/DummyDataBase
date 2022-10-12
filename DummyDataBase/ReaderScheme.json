@@ -1,4 +1,4 @@
-{
+{ 
   "name": "Reader",
   "columns": [
     {
@@ -7,7 +7,7 @@
       "isPrimary": true
     },
     {
-      "name": "Name",
+      "name": "FullName",
       "type": "string",
       "isPrimary": false
     }

@@ -1,5 +1,5 @@
 {
-  "name": "Reader",
+  "name": "Action",
   "columns": [
     {
       "name": "ID",
@@ -17,13 +17,13 @@
       "isPrimary": false
     },
     {
-      "name": "DateTake",
+      "name": "Date",
       "type": "DateTime",
       "isPrimary": false
     },
     {
-      "name": "DateReturn",
-      "type": "DateTime",
+      "name": "TypeAction",
+      "type": "string",
       "isPrimary": false
     }
   ]
