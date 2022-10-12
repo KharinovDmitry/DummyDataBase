@@ -2,6 +2,7 @@
 {
     class Book
     {
+        public int ID { get; }
         public string Name { get; }
         public string Author { get; }
         public int YearPublication { get; }

@@ -2,6 +2,7 @@
 {
     class Action
     {
+        public int ID { get; }
         public Book Book { get; }
         public Reader Reader { get; }
         public DateTime DateTake { get; }

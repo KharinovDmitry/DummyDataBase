@@ -2,6 +2,11 @@
   "name": "Reader",
   "columns": [
     {
+      "name": "ID",
+      "type": "int",
+      "isPrimary": true
+    },
+    {
       "name": "Book",
       "type": "Book",
       "isPrimary": false
