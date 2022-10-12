@@ -13,7 +13,7 @@ namespace DummyDataBase
             string readerJson = File.ReadAllText("./ReaderScheme.json");
             JsonTable tableReaders = JsonConvert.DeserializeObject<JsonTable>(readerJson);
             string readerCsv = File.ReadAllText("./Data/Readers.csv");
-            List<Reader> readers = CsvParser.Parse(readerCsv, tableReaders);
+            List<Reader> readers = CsvParser.ParseReaders(readerCsv, tableReaders);
 
             string bookJson = File.ReadAllText("./BookScheme.json");
             JsonTable tableBooks = JsonConvert.DeserializeObject<JsonTable>(bookJson);
