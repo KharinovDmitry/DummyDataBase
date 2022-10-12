@@ -11,7 +11,7 @@
             else
             {
                 List<Reader> list = new List<Reader>();
-                Console.WriteLine("Valid");
+                
                 return list;
             }
         }
@@ -22,7 +22,7 @@
             string[] inputLines = input.Split("\n");
             string[] titles = inputLines[0].Split(";");
             res = isValidTitles(format, titles);
-            res = isValidData(format, inputLines);
+            res = isValidData(format, inputLines) ? res : false;
             return res;
         }
 
@@ -79,7 +79,7 @@
                 if (!titles[i].Contains(format.Fields[i].Name))
                 {
                     Console.WriteLine("Несоответсвие заголовков\n" +
-                        "Столбец:{0} Ожидалось {1}, а встречено {1}",
+                        "Столбец:{0} Ожидалось {1}, а встречено {2}",
                         i + 1, format.Fields[i].Name, titles[i]);
                     return false;
                 }
