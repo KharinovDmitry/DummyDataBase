@@ -1,0 +1,30 @@
+{
+  "name": "Reader",
+  "columns": [
+    {
+      "name": "Name",
+      "type": "string",
+      "isPrimary": false
+    },
+    {
+      "name": "Author",
+      "type": "string",
+      "isPrimary": false
+    },
+    {
+      "name": "YearPublication",
+      "type": "int",
+      "isPrimary": false
+    },
+    {
+      "name": "Wardrobe",
+      "type": "int",
+      "isPrimary": false
+    },
+    {
+      "name": "Shelf",
+      "type": "int",
+      "isPrimary": false
+    }
+  ]
+}

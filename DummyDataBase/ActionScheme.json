@@ -1,0 +1,25 @@
+{
+  "name": "Reader",
+  "columns": [
+    {
+      "name": "Book",
+      "type": "Book",
+      "isPrimary": false
+    },
+    {
+      "name": "Reader",
+      "type": "Reader",
+      "isPrimary": false
+    },
+    {
+      "name": "DateTake",
+      "type": "DateTime",
+      "isPrimary": false
+    },
+    {
+      "name": "DateReturn",
+      "type": "DateTime",
+      "isPrimary": false
+    }
+  ]
+}
