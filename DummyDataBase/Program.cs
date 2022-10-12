@@ -1,7 +1,4 @@
 ﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using System;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace DummyDataBase
 {
@@ -9,7 +6,6 @@ namespace DummyDataBase
     {
         static void Main(string[] args)
         {
-
             string readerJson = File.ReadAllText("./ReaderScheme.json");
             JsonTable tableReaders = JsonConvert.DeserializeObject<JsonTable>(readerJson);
             string readerCsv = File.ReadAllText("./Data/Readers.csv");
@@ -24,21 +20,8 @@ namespace DummyDataBase
             JsonTable tableActions = JsonConvert.DeserializeObject<JsonTable>(actionJson);
             string actionCsv = File.ReadAllText("./Data/Actions.csv");
             List<Action> actions = CsvParser.ParseActions(actionCsv, tableActions, readers, books);
-            foreach (var action in actions)
-                action.Print();
-
-
-
+           
             Console.ReadKey();
         }
-    }
-    public class Item
-    {
-        public int millis;
-        public string stamp;
-        public DateTime datetime;
-        public string light;
-        public float temp;
-        public float vcc;
     }
 }

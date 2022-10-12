@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Transactions;
-
-namespace DummyDataBase
+﻿namespace DummyDataBase
 {
     static class CsvParser
     {
@@ -25,6 +22,7 @@ namespace DummyDataBase
                 return list;
             }
         }
+
         public static List<Book> ParseBooks(string input, JsonTable format)
         {
             if (!isValid(input, format))
@@ -50,6 +48,7 @@ namespace DummyDataBase
                 return list;
             }
         }
+
         public static List<Action> ParseActions(string input, JsonTable format, List<Reader> readers, List<Book> books)
         {
             if (!isValid(input, format))
@@ -88,6 +87,7 @@ namespace DummyDataBase
             }
             return null;
         }
+
         private static Book GetBook(int id, List<Book> list)
         {
             foreach (var book in list)
@@ -99,6 +99,7 @@ namespace DummyDataBase
             }
             return null;
         }
+
         private static bool isValid(string input, JsonTable format)
         {
             bool res = true;
@@ -147,7 +148,6 @@ namespace DummyDataBase
                 "строка: {0} столбец: {1} - Ожидалось {2}, а встречено \"{3}\"",
                 s + 1, i + 1, typeFormat, typeExept);
         }
-
 
         private static bool isValidTitles(JsonTable format, string[] titles)
         {
