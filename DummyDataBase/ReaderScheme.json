@@ -2,12 +2,12 @@
   "name": "Reader",
   "columns": [
     {
-      "name": "ID",
+      "name": "id",
       "type": "int",
       "isPrimary": true
     },
     {
-      "name": "FullName",
+      "name": "fullName",
       "type": "string",
       "isPrimary": false
     }

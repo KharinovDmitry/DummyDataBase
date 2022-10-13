@@ -2,32 +2,32 @@
   "name": "Book",
   "columns": [
     {
-      "name": "ID",
+      "name": "id",
       "type": "int",
       "isPrimary": true
     },
     {
-      "name": "Name",
+      "name": "name",
       "type": "string",
       "isPrimary": false
     },
     {
-      "name": "Author",
+      "name": "author",
       "type": "string",
       "isPrimary": false
     },
     {
-      "name": "YearPublication",
+      "name": "yearPublication",
       "type": "int",
       "isPrimary": false
     },
     {
-      "name": "Wardrobe",
+      "name": "wardrobe",
       "type": "int",
       "isPrimary": false
     },
     {
-      "name": "Shelf",
+      "name": "shelf",
       "type": "int",
       "isPrimary": false
     }

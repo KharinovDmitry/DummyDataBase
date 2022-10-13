@@ -1,23 +1,24 @@
 ﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace DummyDataBase
 {
     class JsonElement
     {
-        [Newtonsoft.Json.JsonProperty(PropertyName = "name")]
+        [JsonProperty(PropertyName = "name")]
         public string Name { get; set; }
-        [Newtonsoft.Json.JsonProperty(PropertyName = "type")]
+        [JsonProperty(PropertyName = "type")]
         public string Type { get; set; }
-        [Newtonsoft.Json.JsonProperty(PropertyName = "isPrimary")]
+        [JsonProperty(PropertyName = "referencedTable")]
+        public string ReferencedTable { get; set; }
+        [JsonProperty(PropertyName = "isPrimary")]
         public bool isPrimary { get; set; }
     }
     class JsonTable
     {
 
-        [Newtonsoft.Json.JsonProperty(PropertyName = "name")]
+        [JsonProperty(PropertyName = "name")]
         public string TableName { get; set; }
-        [Newtonsoft.Json.JsonProperty(PropertyName = "columns")]
+        [JsonProperty(PropertyName = "columns")]
         public List<JsonElement> Fields { get; set; }
     }
 

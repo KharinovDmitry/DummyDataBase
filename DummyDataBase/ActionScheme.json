@@ -2,18 +2,20 @@
   "name": "Action",
   "columns": [
     {
-      "name": "ID",
+      "name": "id",
       "type": "int",
       "isPrimary": true
     },
     {
-      "name": "Book",
-      "type": "Book",
+      "name": "bookId",
+      "type": "id",
+      "referencedTable": "Book",
       "isPrimary": false
     },
     {
-      "name": "Reader",
-      "type": "Reader",
+      "name": "readerId",
+      "type": "int",
+      "referencedTable": "Reader",
       "isPrimary": false
     },
     {

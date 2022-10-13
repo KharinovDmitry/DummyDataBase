@@ -65,12 +65,12 @@
                     var atcionsInfo = inputLines[i].Split(";");
                     
                     var id = int.Parse(atcionsInfo[0]);
-                    var book = int.Parse(atcionsInfo[1]);
-                    var reader = int.Parse(atcionsInfo[2]);
+                    var bookId = int.Parse(atcionsInfo[1]);
+                    var readerId = int.Parse(atcionsInfo[2]);
                     var date = DateTime.Parse(atcionsInfo[3]);
                     var type = atcionsInfo[4];
 
-                    list.Add(new Action(id, GetBook(book, books), GetReader(reader, readers), date, type));
+                    list.Add(new Action(id, GetBook(bookId, books), GetReader(readerId, readers), date, type));
                 }
                 return list;
             }
@@ -159,7 +159,7 @@
             }
             for (int i = 0; i < titles.Length; i++)
             {
-                if (!titles[i].Contains(format.Fields[i].Name))
+                if (!titles[i].ToLower().Contains(format.Fields[i].Name.ToLower()))
                 {
                     Console.WriteLine("Несоответсвие заголовков\n" +
                         "Столбец:{0} Ожидалось {1}, а встречено {2}",
