@@ -2,23 +2,23 @@
 {
     class Action
     {
+        public int ID { get; }
         public Book Book { get; }
         public Reader Reader { get; }
-        public DateTime DateTake { get; }
-        public DateTime DateReturn { get; set; }    
+        public DateTime Date { get; }
+        public string TypeAction { get; }
 
-        public Action(Book book, Reader reader, DateTime dateTake)
+        public Action(int id, Book book, Reader reader, DateTime date, string typeAction)
         {
+            ID = id;
             Book = book;
             Reader = reader;
-            DateTake = dateTake;
+            Date = date;
+            TypeAction = typeAction;
         }
-        public Action(Book book, Reader reader, DateTime dateTake, DateTime dateReturn)
+        public void Print()
         {
-            Book = book;
-            Reader = reader;
-            DateTake = dateTake;
-            DateReturn = dateReturn;
+            Console.WriteLine("{0} {1} {2} {3} {4}", ID, Book.Name, Reader.FullName, Date, TypeAction);
         }
     }
 }

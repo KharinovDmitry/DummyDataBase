@@ -1,13 +1,13 @@
-{
+{ 
   "name": "Reader",
   "columns": [
     {
-      "name": "ID",
+      "name": "id",
       "type": "int",
       "isPrimary": true
     },
     {
-      "name": "Name",
+      "name": "fullName",
       "type": "string",
       "isPrimary": false
     }

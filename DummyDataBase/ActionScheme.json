@@ -1,24 +1,31 @@
 {
-  "name": "Reader",
+  "name": "Action",
   "columns": [
     {
-      "name": "Book",
-      "type": "Book",
+      "name": "id",
+      "type": "int",
+      "isPrimary": true
+    },
+    {
+      "name": "bookId",
+      "type": "int",
+      "referencedTable": "Books",
       "isPrimary": false
     },
     {
-      "name": "Reader",
-      "type": "Reader",
+      "name": "readerId",
+      "type": "int",
+      "referencedTable": "Readers",
       "isPrimary": false
     },
     {
-      "name": "DateTake",
+      "name": "Date",
       "type": "DateTime",
       "isPrimary": false
     },
     {
-      "name": "DateReturn",
-      "type": "DateTime",
+      "name": "TypeAction",
+      "type": "string",
       "isPrimary": false
     }
   ]

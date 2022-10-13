@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System.Reflection.Metadata.Ecma335;
 
 namespace DummyDataBase
 {
@@ -6,21 +7,54 @@ namespace DummyDataBase
     {
         static void Main(string[] args)
         {
-            List<Book> books = new List<Book>()
+            string readerJson = File.ReadAllText("./ReaderScheme.json");
+            JsonTable tableReaders = JsonConvert.DeserializeObject<JsonTable>(readerJson);
+            string readerCsv = File.ReadAllText("./Data/Readers.csv").Replace("\r", "");
+            List<Reader> readers = CsvParser.ParseReaders(readerCsv, tableReaders);
+
+            string bookJson = File.ReadAllText("./BookScheme.json");
+            JsonTable tableBooks = JsonConvert.DeserializeObject<JsonTable>(bookJson);
+            string bookCsv = File.ReadAllText("./Data/Books.csv").Replace("\r", "");
+            List<Book> books = CsvParser.ParseBooks(bookCsv, tableBooks);
+
+            string actionJson = File.ReadAllText("./ActionScheme.json");
+            JsonTable tableActions = JsonConvert.DeserializeObject<JsonTable>(actionJson);
+            string actionCsv = File.ReadAllText("./Data/Actions.csv").Replace("\r", "");
+            List<Action> history = CsvParser.ParseActions(actionCsv, tableActions, readers, books);
+
+            if (readers == null || books == null || history == null)
+                return;
+
+            foreach (var book in books)
             {
-                new Book("Война и мир", "Толстой", 2020, 1, 1),
-                new Book("Преступление и наказание", "Достоевский", 2015, 1, 1)
-            };
-            List<Reader> readers = new List<Reader>()
+                Console.WriteLine("{0} \"{1}\" г.{2}",book.Author, book.Name, book.YearPublication);
+                string info = GetInfoBook(book, history);
+                if (info != "")
+                    Console.WriteLine("\t" + info);
+                Console.WriteLine();
+            }
+
+            Console.ReadKey();
+        }
+
+        private static string GetInfoBook(Book book, List<Action> history)
+        {
+            string res = "";
+            foreach (var action in history)
             {
-                new Reader(1, "Устьянцев Евгений Юрьевич"),
-                new Reader(2, "Кожурков Георгий Хорошкомалькович")
-            };
-            List<Action> actions = new List<Action>()
-            {
-                new Action(books[0], readers[0], new DateTime(2022, 10, 8)),
-                new Action(books[1], readers[1], new DateTime(2022, 10, 9), new DateTime(2022, 10, 11))
-            };
+                if(action.Book == book)
+                {
+                    if (action.TypeAction.Contains("Взял"))
+                    {
+                        res = $"Взял {action.Reader.FullName} {action.Date.Day}.{action.Date.Month}.{action.Date.Year}";
+                    }
+                    else
+                    {
+                        res = "";
+                    }
+                }
+            }
+            return res;
         }
     }
 }
