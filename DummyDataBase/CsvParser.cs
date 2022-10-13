@@ -11,10 +11,10 @@
             else
             {
                 List<Reader> list = new List<Reader>();
-                var inputLines = input.Split("\n");
+                string[] inputLines = input.Split("\n");
                 for (int i = 1; i < inputLines.Length; i++)
                 {
-                    var readerInfo = inputLines[i].Split(";");
+                    string[] readerInfo = inputLines[i].Split(";");
                     int id = int.Parse(readerInfo[0]);
                     string fullName = readerInfo[1];
                     list.Add(new Reader(id, fullName));
@@ -27,16 +27,15 @@
         {
             if (!isValid(input, format))
             {
-                Console.WriteLine("not valid");
                 return null;
             }
             else
             {
                 List<Book> list = new List<Book>();
-                var inputLines = input.Split("\n");
+                string[] inputLines = input.Split("\n");
                 for (int i = 1; i < inputLines.Length; i++)
                 {
-                    var bookInfo = inputLines[i].Split(";");
+                    string[] bookInfo = inputLines[i].Split(";");
                     int id = int.Parse(bookInfo[0]);
                     string name = bookInfo[1];
                     string autor = bookInfo[2];
@@ -53,23 +52,20 @@
         {
             if (!isValid(input, format))
             {
-
                 return null;
             }
             else
             {
                 List<Action> list = new List<Action>();
-                var inputLines = input.Split("\n");
+                string[] inputLines = input.Split("\n");
                 for (int i = 1; i < inputLines.Length; i++)
                 {
-                    var atcionsInfo = inputLines[i].Split(";");
-                    
-                    var id = int.Parse(atcionsInfo[0]);
-                    var bookId = int.Parse(atcionsInfo[1]);
-                    var readerId = int.Parse(atcionsInfo[2]);
-                    var date = DateTime.Parse(atcionsInfo[3]);
-                    var type = atcionsInfo[4];
-
+                    string[] atcionsInfo = inputLines[i].Split(";");    
+                    int id = int.Parse(atcionsInfo[0]);
+                    int bookId = int.Parse(atcionsInfo[1]);
+                    int readerId = int.Parse(atcionsInfo[2]);
+                    DateTime date = DateTime.Parse(atcionsInfo[3]);
+                    string type = atcionsInfo[4];
                     list.Add(new Action(id, GetBook(bookId, books), GetReader(readerId, readers), date, type));
                 }
                 return list;
@@ -85,7 +81,7 @@
                     return reader;
                 }
             }
-            return null;
+            throw new ArgumentException();
         }
 
         private static Book GetBook(int id, List<Book> list)
@@ -97,22 +93,19 @@
                     return book;
                 }
             }
-            return null;
+            throw new ArgumentException();
         }
 
         private static bool isValid(string input, JsonTable format)
         {
-            bool res = true;
             string[] inputLines = input.Split("\n");
             string[] titles = inputLines[0].Split(";");
-            res = isValidTitles(format, titles);
-            res = isValidData(format, inputLines) ? res : false;
-            return res;
+            return isValidTitles(format, titles) && isValidData(format, inputLines);
+
         }
 
         private static bool isValidData(JsonTable format, string[] inputLines)
         {
-            bool res = true;
             for(int s = 1; s < inputLines.Length; s++)
             {
                 string[] fields = inputLines[s].Split(";");
@@ -123,15 +116,15 @@
                         case "int":
                             if(!int.TryParse(fields[i], out int temp))
                             {
-                                res = false;
-                                WriteError(s, i, format.Fields[i].Type, fields[i]);
+                                WriteError("Неверный тип данных", s, i, format.Fields[i].Type, fields[i]);
+                                return false;
                             }
                             break;
                         case "DateTime":
                             if(!DateTime.TryParse(fields[i], out DateTime temp2))
                             {
-                                res = false;
-                                WriteError(s, i, format.Fields[i].Type, fields[i]);
+                                WriteError("Неверный тип данных", s, i, format.Fields[i].Type, fields[i]);
+                                return false;
                             }
                             break;
                         default:
@@ -139,14 +132,7 @@
                     }
                 }
             }
-            return res;
-        }
-
-        private static void WriteError(int s, int i, string typeFormat, string typeExept)
-        {
-            Console.WriteLine("Неверный формат данный\n" +
-                "строка: {0} столбец: {1} - Ожидалось {2}, а встречено \"{3}\"",
-                s + 1, i + 1, typeFormat, typeExept);
+            return true;
         }
 
         private static bool isValidTitles(JsonTable format, string[] titles)
@@ -161,13 +147,18 @@
             {
                 if (!titles[i].ToLower().Contains(format.Fields[i].Name.ToLower()))
                 {
-                    Console.WriteLine("Несоответсвие заголовков\n" +
-                        "Столбец:{0} Ожидалось {1}, а встречено {2}",
-                        i + 1, format.Fields[i].Name, titles[i]);
+                    WriteError("Несоответсвие заголовков", 0, i, format.Fields[i].Name, titles[i]);
                     return false;
                 }
             }
             return true;
+        }
+
+        private static void WriteError(string textError, int s, int i, string typeFormat, string typeExept)
+        {
+            Console.WriteLine("{0}\n" +
+                "строка: {1} столбец: {2} - Ожидалось {3}, а встречено \"{4}\"",
+                textError, s + 1, i + 1, typeFormat, typeExept);
         }
     }
 }

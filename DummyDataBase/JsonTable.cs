@@ -2,7 +2,7 @@
 
 namespace DummyDataBase
 {
-    class JsonElement
+    class JsonTableElement
     {
         [JsonProperty(PropertyName = "name")]
         public string Name { get; set; }
@@ -19,7 +19,7 @@ namespace DummyDataBase
         [JsonProperty(PropertyName = "name")]
         public string TableName { get; set; }
         [JsonProperty(PropertyName = "columns")]
-        public List<JsonElement> Fields { get; set; }
+        public List<JsonTableElement> Fields { get; set; }
     }
 
 }

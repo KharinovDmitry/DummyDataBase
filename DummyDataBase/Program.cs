@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System.Reflection.Metadata.Ecma335;
 
 namespace DummyDataBase
 {
@@ -21,12 +22,15 @@ namespace DummyDataBase
             string actionCsv = File.ReadAllText("./Data/Actions.csv").Replace("\r", "");
             List<Action> history = CsvParser.ParseActions(actionCsv, tableActions, readers, books);
 
+            if (readers == null || books == null || history == null)
+                return;
+
             foreach (var book in books)
             {
-                Console.WriteLine(book.Name);
+                Console.WriteLine("{0} \"{1}\" г.{2}",book.Author, book.Name, book.YearPublication);
                 string info = GetInfoBook(book, history);
                 if (info != "")
-                    Console.WriteLine(info);
+                    Console.WriteLine("\t" + info);
                 Console.WriteLine();
             }
 

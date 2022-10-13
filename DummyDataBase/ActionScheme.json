@@ -8,14 +8,14 @@
     },
     {
       "name": "bookId",
-      "type": "id",
-      "referencedTable": "Book",
+      "type": "int",
+      "referencedTable": "Books",
       "isPrimary": false
     },
     {
       "name": "readerId",
       "type": "int",
-      "referencedTable": "Reader",
+      "referencedTable": "Readers",
       "isPrimary": false
     },
     {
