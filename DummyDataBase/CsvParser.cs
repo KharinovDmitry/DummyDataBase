@@ -1,164 +1,112 @@
-﻿namespace DummyDataBase
+﻿using System.Windows.Markup;
+
+namespace DummyDataBase
 {
     static class CsvParser
     {
-        public static List<Reader> ParseReaders(string input, JsonTable format)
+        public static Table ParseCsv(string input, TableScheme scheme)
         {
-            if (!isValid(input, format))
+            if (!isValid(input, scheme))
             {
                 return null;
             }
-            else
+
+            Table table = new Table(scheme);
+
+            string[] lines = input.Split("\n");
+            for (int i = 1; i < lines.Length; i++)
             {
-                List<Reader> list = new List<Reader>();
-                string[] inputLines = input.Split("\n");
-                for (int i = 1; i < inputLines.Length; i++)
+                Row newRow = new Row();
+                string[] data = lines[i].Split(";");
+                for (int j = 0; j < data.Length; j++)
                 {
-                    string[] readerInfo = inputLines[i].Split(";");
-                    int id = int.Parse(readerInfo[0]);
-                    string fullName = readerInfo[1];
-                    list.Add(new Reader(id, fullName));
+                    object value;
+                    switch (scheme.Columns[j].Type)
+                    {
+                        case DataType.String:
+                            value = data[j];
+                            break;
+                        case DataType.Int:
+                            value = int.Parse(data[j]);
+                            break;
+                        case DataType.Float:
+                            value = float.Parse(data[j]);
+                            break;
+                        default:
+                            throw new ArgumentException();
+                    }
+                    newRow.Data.Add(scheme.Columns[j], value);
                 }
-                return list;
+                table.Rows.Add(newRow);
             }
+
+            return table;
         }
 
-        public static List<Book> ParseBooks(string input, JsonTable format)
-        {
-            if (!isValid(input, format))
-            {
-                return null;
-            }
-            else
-            {
-                List<Book> list = new List<Book>();
-                string[] inputLines = input.Split("\n");
-                for (int i = 1; i < inputLines.Length; i++)
-                {
-                    string[] bookInfo = inputLines[i].Split(";");
-                    int id = int.Parse(bookInfo[0]);
-                    string name = bookInfo[1];
-                    string autor = bookInfo[2];
-                    int year = int.Parse(bookInfo[3]);
-                    int wardrobe = int.Parse(bookInfo[4]);
-                    int shelf = int.Parse(bookInfo[5]);
-                    list.Add(new Book(id, name, autor, year, wardrobe, shelf));
-                }
-                return list;
-            }
-        }
-
-        public static List<Action> ParseActions(string input, JsonTable format, List<Reader> readers, List<Book> books)
-        {
-            if (!isValid(input, format))
-            {
-                return null;
-            }
-            else
-            {
-                List<Action> list = new List<Action>();
-                string[] inputLines = input.Split("\n");
-                for (int i = 1; i < inputLines.Length; i++)
-                {
-                    string[] atcionsInfo = inputLines[i].Split(";");    
-                    int id = int.Parse(atcionsInfo[0]);
-                    int bookId = int.Parse(atcionsInfo[1]);
-                    int readerId = int.Parse(atcionsInfo[2]);
-                    DateTime date = DateTime.Parse(atcionsInfo[3]);
-                    string type = atcionsInfo[4];
-                    list.Add(new Action(id, GetBook(bookId, books), GetReader(readerId, readers), date, type));
-                }
-                return list;
-            }
-        }
-
-        private static Reader GetReader(int id, List<Reader> list)
-        {
-            foreach (var reader in list)
-            {
-                if(reader.ID == id)
-                {
-                    return reader;
-                }
-            }
-            throw new ArgumentException();
-        }
-
-        private static Book GetBook(int id, List<Book> list)
-        {
-            foreach (var book in list)
-            {
-                if (book.ID == id)
-                {
-                    return book;
-                }
-            }
-            throw new ArgumentException();
-        }
-
-        private static bool isValid(string input, JsonTable format)
+        private static bool isValid(string input, TableScheme scheme)
         {
             string[] inputLines = input.Split("\n");
             string[] titles = inputLines[0].Split(";");
-            return isValidTitles(format, titles) && isValidData(format, inputLines);
+            return isValidTitles(scheme, titles) && isValidData(scheme, inputLines);
 
         }
 
-        private static bool isValidData(JsonTable format, string[] inputLines)
+        private static bool isValidData(TableScheme scheme, string[] inputLines)
         {
             for(int s = 1; s < inputLines.Length; s++)
             {
                 string[] fields = inputLines[s].Split(";");
                 for (int i = 0; i < fields.Length; i++)
                 {
-                    switch (format.Fields[i].Type)
+                    switch (scheme.Columns[i].Type)
                     {
-                        case "int":
+                        case DataType.Int:
                             if(!int.TryParse(fields[i], out int temp))
                             {
-                                WriteError("Неверный тип данных", s, i, format.Fields[i].Type, fields[i]);
+                                Console.WriteLine("Неверный тип данных\n" +
+                                    "столбец: {0} строка: {1} - Ожидалось int, а встречено \"{2}\"",
+                                    s + 1, i + 1, fields[i]);
                                 return false;
                             }
                             break;
-                        case "DateTime":
-                            if(!DateTime.TryParse(fields[i], out DateTime temp2))
+                        case DataType.Float:
+                            if(!float.TryParse(fields[i], out float temp2))
                             {
-                                WriteError("Неверный тип данных", s, i, format.Fields[i].Type, fields[i]);
+                                Console.WriteLine("Неверный тип данных\n" +
+                                    "столбец: {0} строка: {1} - Ожидалось float, а встречено \"{2}\"",
+                                    s + 1, i + 1, fields[i]);
                                 return false;
                             }
+                            break;
+                        case DataType.String:
                             break;
                         default:
-                            break;
+                            throw new ArgumentException();
                     }
                 }
             }
             return true;
         }
 
-        private static bool isValidTitles(JsonTable format, string[] titles)
+        private static bool isValidTitles(TableScheme scheme, string[] titles)
         {
-            if (titles.Length != format.Fields.Count)
+            if (titles.Length != scheme.Columns.Count)
             {
                 Console.WriteLine("Ожидалось {0} столбцов, а получено {1}",
-                    format.Fields.Count, titles.Length);
+                    scheme.Columns.Count, titles.Length);
                 return false;
             }
             for (int i = 0; i < titles.Length; i++)
             {
-                if (!titles[i].ToLower().Contains(format.Fields[i].Name.ToLower()))
+                if (!titles[i].ToLower().Contains(scheme.Columns[i].Name.ToLower()))
                 {
-                    WriteError("Несоответсвие заголовков", 0, i, format.Fields[i].Name, titles[i]);
+                    Console.WriteLine("Несоответсвие заголовков\n" +
+                        "столбец: {1} - Ожидалось {1}, а встречено \"{2}\"",
+                        i + 1, scheme.Columns[i].Name, titles[i]);
                     return false;
                 }
             }
             return true;
-        }
-
-        private static void WriteError(string textError, int s, int i, string typeFormat, string typeExept)
-        {
-            Console.WriteLine("{0}\n" +
-                "строка: {1} столбец: {2} - Ожидалось {3}, а встречено \"{4}\"",
-                textError, s + 1, i + 1, typeFormat, typeExept);
         }
     }
 }
