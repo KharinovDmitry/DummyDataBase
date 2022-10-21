@@ -1,4 +1,6 @@
 ﻿using Newtonsoft.Json.Linq;
+using System.Data.Common;
+using System.Diagnostics.Contracts;
 
 namespace DummyDataBase
 {
@@ -15,26 +17,18 @@ namespace DummyDataBase
             Name = scheme.TableName;
         }
 
-        public void Print()
+        public void Print(int count, List<Table> tables)
         {
             Console.WriteLine(Name);
-            foreach (var column in scheme.Columns)
-            {
-                Console.Write(column.Name + " ");
-            }
             Console.WriteLine();
             foreach (var row in Rows)
             {
-                foreach (var data in row.Data)
-                {
-                    Console.Write(data.Value + " ");
-                }
-                Console.WriteLine();
+                row.Print(count, tables);
             }
             Console.WriteLine();
         }
 
-        public Table GetTableByName(string name, List<Table> tables)
+        public static Table GetTableByName(string name, List<Table> tables)
         {
             foreach(var table in tables)
             {
@@ -46,35 +40,19 @@ namespace DummyDataBase
             throw new ArgumentException($"Несуществующая таблица: {name}");
         }
 
-        public object GetElementFromTable(string key, Table table)
+        public Row GetElement(int key)
         {
-            foreach (var row in table.Rows)
+            foreach (var row in Rows)
             {
                 string keyRow = "";
                 foreach (var column in row.Data)
                 {
                     if(column.Key.isPrimary)
                     {
-                        switch(column.Key.Type)
-                        {
-                            case DataType.String:
-                                keyRow += ((string)column.Value);
-                                break;
-                            case DataType.Int:
-                                keyRow += ((int)column.Value).ToString();
-                                break;
-                            case DataType.Float:
-                                keyRow += ((float)column.Value).ToString();
-                                break;
-                            case DataType.DateTime:
-                                keyRow += ((DateTime)column.Value).ToString();
-                                break;
-                            default:
-                                throw new ArgumentException($"Ошибка в {table.Name}:{column.Key.Name}");
-                        }
+                        keyRow += ((int)column.Value).ToString();
                     }
                 }
-                if(keyRow == key)
+                if(int.Parse(keyRow) == key)
                 {
                     return row;
                 }
@@ -95,7 +73,32 @@ namespace DummyDataBase
             Data = new Dictionary<Column, object>();
         }
 
-
+        private static void CreateTab(int count)
+        {
+            for (int i = 0; i < count; i++)
+            {
+                Console.Write("\t");
+            }
+        }
+        public void Print(int count, List<Table> tables)
+        {
+            foreach (var data in Data)
+            {
+                if (data.Key.ReferencedTable != null)
+                {
+                    Console.WriteLine($"{data.Key.Name}:");
+                    Table refTable = Table.GetTableByName(data.Key.ReferencedTable, tables);
+                    CreateTab(count);
+                    refTable.GetElement((int)data.Value).Print(count + 1, tables);
+                }
+                else
+                {
+                    CreateTab(count);
+                    Console.WriteLine($"{data.Key.Name}:{data.Value}");
+                }
+            }
+            Console.WriteLine();
+        }
     }
 
 }

@@ -101,7 +101,7 @@
         {
             if (titles.Length != scheme.Columns.Count)
             {
-                throw new ArgumentException($"Ошибка в ${scheme.TableName}!\n" +
+                throw new ArgumentException($"Ошибка в {scheme.TableName}!\n" +
                     $"Ожидалось {scheme.Columns.Count} столбцов, а получено {titles.Length}");
             }
             for (int i = 0; i < titles.Length; i++)

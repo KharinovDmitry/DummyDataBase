@@ -11,7 +11,7 @@ namespace DummyDataBase
             ParseTables();
 
             foreach (Table t in tables)
-                t.Print();
+                t.Print(0, tables);
 
             Console.ReadKey();
         }
@@ -20,20 +20,34 @@ namespace DummyDataBase
         {
             try
             {
-                string readerJson = File.ReadAllText("./ReaderScheme.json");
-                TableScheme tableReaders = JsonConvert.DeserializeObject<TableScheme>(readerJson);
-                string readerCsv = File.ReadAllText("./Data/Readers.csv").Replace("\r", "");
-                tables.Add(new Table(tableReaders, readerCsv));
-
-                string bookJson = File.ReadAllText("./BookScheme.json");
-                TableScheme tableBooks = JsonConvert.DeserializeObject<TableScheme>(bookJson);
-                string bookCsv = File.ReadAllText("./Data/Books.csv").Replace("\r", "");
-                tables.Add(new Table(tableBooks, bookCsv));
-
-                string actionJson = File.ReadAllText("./ActionScheme.json");
-                TableScheme tableActions = JsonConvert.DeserializeObject<TableScheme>(actionJson);
-                string actionCsv = File.ReadAllText("./Data/Actions.csv").Replace("\r", "");
-                tables.Add(new Table(tableActions, actionCsv));
+                foreach (var dirMain in Directory.GetDirectories(@"./data"))
+                {
+                    string jsonScheme;
+                    TableScheme tableScheme = null;
+                    string csvData = null;
+                    foreach (var file in Directory.GetFiles(dirMain))
+                    {
+                        if(file == null)
+                        {
+                            continue;
+                        }
+                        if (file.Contains(".json"))
+                        {
+                            jsonScheme = File.ReadAllText(file);
+                            tableScheme = JsonConvert.DeserializeObject<TableScheme>(jsonScheme);
+                            continue;
+                        }
+                        if (file.Contains(".csv"))
+                        {
+                            csvData = File.ReadAllText(file).Replace("\r", "");
+                            continue;
+                        }
+                    }
+                    if (tableScheme != null && csvData != null)
+                    {
+                        tables.Add(new Table(tableScheme, csvData));
+                    }
+                }
             }
             catch(ArgumentException e)
             {
