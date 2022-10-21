@@ -1,17 +1,15 @@
-﻿using System.Windows.Markup;
-
-namespace DummyDataBase
+﻿namespace DummyDataBase
 {
     static class CsvParser
     {
-        public static Table ParseCsv(string input, TableScheme scheme)
+        public static List<Row> ParseCsv(string input, TableScheme scheme)
         {
             if (!isValid(input, scheme))
             {
                 return null;
             }
 
-            Table table = new Table(scheme);
+            List<Row> rowsResult = new List<Row>();
 
             string[] lines = input.Split("\n");
             for (int i = 1; i < lines.Length; i++)
@@ -32,15 +30,19 @@ namespace DummyDataBase
                         case DataType.Float:
                             value = float.Parse(data[j]);
                             break;
+                        case DataType.DateTime:
+                            value = DateTime.Parse(data[j]);
+                            break;
                         default:
-                            throw new ArgumentException();
+                            throw new ArgumentException($"Ошибка в {scheme.TableName}\n" +
+                                $"Неизвестный тип данных {scheme.Columns[i].Type}");
                     }
                     newRow.Data.Add(scheme.Columns[j], value);
                 }
-                table.Rows.Add(newRow);
+                rowsResult.Add(newRow);
             }
 
-            return table;
+            return rowsResult;
         }
 
         private static bool isValid(string input, TableScheme scheme)
@@ -61,49 +63,54 @@ namespace DummyDataBase
                     switch (scheme.Columns[i].Type)
                     {
                         case DataType.Int:
-                            if(!int.TryParse(fields[i], out int temp))
+                            if(!int.TryParse(fields[i], out int _))
                             {
-                                Console.WriteLine("Неверный тип данных\n" +
-                                    "столбец: {0} строка: {1} - Ожидалось int, а встречено \"{2}\"",
-                                    s + 1, i + 1, fields[i]);
-                                return false;
+                                throw new ArgumentException($"Ошибка в {scheme.TableName}\n" +
+                                    $"Неверный тип данных\n" +
+                                    $"столбец: {s + 1} строка: {i + 1} - Ожидалось int, а встречено \"{fields[i]}\"");
                             }
                             break;
                         case DataType.Float:
-                            if(!float.TryParse(fields[i], out float temp2))
+                            if(!float.TryParse(fields[i], out float _))
                             {
-                                Console.WriteLine("Неверный тип данных\n" +
-                                    "столбец: {0} строка: {1} - Ожидалось float, а встречено \"{2}\"",
-                                    s + 1, i + 1, fields[i]);
-                                return false;
+                                throw new ArgumentException($"Ошибка в {scheme.TableName}\n" +
+                                    $"Неверный тип данных\n" +
+                                    $"столбец: {s + 1} строка: {i + 1} - Ожидалось int, а встречено \"{fields[i]}\"");
+                            }
+                            break;
+                        case DataType.DateTime:
+                            if (!DateTime.TryParse(fields[i], out DateTime _))
+                            {
+                                throw new ArgumentException($"Ошибка в {scheme.TableName}\n" +
+                                    $"Неверный тип данных\n" +
+                                    $"столбец: {s + 1} строка: {i + 1} - Ожидалось int, а встречено \"{fields[i]}\"");
                             }
                             break;
                         case DataType.String:
                             break;
                         default:
-                            throw new ArgumentException();
+                            throw new ArgumentException($"Ошибка в {scheme.TableName}\n" +
+                                $"Неизвестный тип данных {scheme.Columns[i].Type}");
                     }
                 }
             }
             return true;
         }
-
+        
         private static bool isValidTitles(TableScheme scheme, string[] titles)
         {
             if (titles.Length != scheme.Columns.Count)
             {
-                Console.WriteLine("Ожидалось {0} столбцов, а получено {1}",
-                    scheme.Columns.Count, titles.Length);
-                return false;
+                throw new ArgumentException($"Ошибка в ${scheme.TableName}!\n" +
+                    $"Ожидалось {scheme.Columns.Count} столбцов, а получено {titles.Length}");
             }
             for (int i = 0; i < titles.Length; i++)
             {
                 if (!titles[i].ToLower().Contains(scheme.Columns[i].Name.ToLower()))
                 {
-                    Console.WriteLine("Несоответсвие заголовков\n" +
-                        "столбец: {1} - Ожидалось {1}, а встречено \"{2}\"",
-                        i + 1, scheme.Columns[i].Name, titles[i]);
-                    return false;
+                    throw new ArgumentException($"Ошибка в ${scheme.TableName}!\n" +
+                        $"Несоответсвие заголовков\n" +
+                        $"Cтолбец: {i + 1} - Ожидалось {scheme.Columns[i].Name}, а встречено \"{titles[i]}\"");
                 }
             }
             return true;

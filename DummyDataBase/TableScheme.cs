@@ -4,7 +4,7 @@ namespace DummyDataBase
 {
     public enum DataType
     {
-        Int, Float, String
+        Int, Float, String, DateTime
     }
 
     public class Column

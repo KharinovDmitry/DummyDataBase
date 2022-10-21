@@ -18,21 +18,28 @@ namespace DummyDataBase
 
         private static void ParseTables()
         {
-            string readerJson = File.ReadAllText("./ReaderScheme.json");
-            TableScheme tableReaders = JsonConvert.DeserializeObject<TableScheme>(readerJson);
-            string readerCsv = File.ReadAllText("./Data/Readers.csv").Replace("\r", "");
-            tables.Add(CsvParser.ParseCsv(readerCsv, tableReaders));
+            try
+            {
+                string readerJson = File.ReadAllText("./ReaderScheme.json");
+                TableScheme tableReaders = JsonConvert.DeserializeObject<TableScheme>(readerJson);
+                string readerCsv = File.ReadAllText("./Data/Readers.csv").Replace("\r", "");
+                tables.Add(new Table(tableReaders, readerCsv));
 
-            string bookJson = File.ReadAllText("./BookScheme.json");
-            TableScheme tableBooks = JsonConvert.DeserializeObject<TableScheme>(bookJson);
-            string bookCsv = File.ReadAllText("./Data/Books.csv").Replace("\r", "");
-            tables.Add(CsvParser.ParseCsv(bookCsv, tableBooks));
-            /*
-            string actionJson = File.ReadAllText("./ActionScheme.json");
-            TableScheme tableActions = JsonConvert.DeserializeObject<TableScheme>(actionJson);
-            string actionCsv = File.ReadAllText("./Data/Actions.csv").Replace("\r", "");
-            tables.Add(CsvParser.ParseCsv(actionCsv, tableActions));
-            */
+                string bookJson = File.ReadAllText("./BookScheme.json");
+                TableScheme tableBooks = JsonConvert.DeserializeObject<TableScheme>(bookJson);
+                string bookCsv = File.ReadAllText("./Data/Books.csv").Replace("\r", "");
+                tables.Add(new Table(tableBooks, bookCsv));
+
+                string actionJson = File.ReadAllText("./ActionScheme.json");
+                TableScheme tableActions = JsonConvert.DeserializeObject<TableScheme>(actionJson);
+                string actionCsv = File.ReadAllText("./Data/Actions.csv").Replace("\r", "");
+                tables.Add(new Table(tableActions, actionCsv));
+            }
+            catch(ArgumentException e)
+            {
+                Console.WriteLine(e.Message);
+            }
         }
+
     }
 }
