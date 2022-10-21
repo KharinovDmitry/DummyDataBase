@@ -1,20 +1,15 @@
-﻿using Newtonsoft.Json.Linq;
-using System.Data.Common;
-using System.Diagnostics.Contracts;
-
-namespace DummyDataBase
+﻿namespace DummyDataBase
 {
     public class Table
     {
         public string Name { get; }
+
         public List<Row> Rows { get; }
-        private TableScheme scheme { get; }
 
         public Table(TableScheme scheme, string csv)
         {
-            this.scheme = scheme; 
-            Rows = CsvParser.ParseCsv(csv, scheme);
             Name = scheme.TableName;
+            Rows = CsvParser.ParseCsv(csv, scheme);
         }
 
         public void Print(int count, List<Table> tables)
@@ -62,8 +57,6 @@ namespace DummyDataBase
 
     }
 
-    
-
     public class Row
     {
         public Dictionary<Column, object> Data { get; }
@@ -80,6 +73,7 @@ namespace DummyDataBase
                 Console.Write("\t");
             }
         }
+
         public void Print(int count, List<Table> tables)
         {
             foreach (var data in Data)
