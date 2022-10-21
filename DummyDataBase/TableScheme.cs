@@ -2,24 +2,29 @@
 
 namespace DummyDataBase
 {
-    class JsonTableElement
+    public enum DataType
+    {
+        Int, Float, String, DateTime
+    }
+
+    public class Column
     {
         [JsonProperty(PropertyName = "name")]
         public string Name { get; set; }
         [JsonProperty(PropertyName = "type")]
-        public string Type { get; set; }
+        public DataType Type { get; set; }
         [JsonProperty(PropertyName = "referencedTable")]
-        public string ReferencedTable { get; set; }
+        public string? ReferencedTable { get; set; }
         [JsonProperty(PropertyName = "isPrimary")]
         public bool isPrimary { get; set; }
     }
-    class JsonTable
+    public class TableScheme
     {
 
         [JsonProperty(PropertyName = "name")]
         public string TableName { get; set; }
         [JsonProperty(PropertyName = "columns")]
-        public List<JsonTableElement> Fields { get; set; }
+        public List<Column> Columns { get; set; }
     }
 
 }
