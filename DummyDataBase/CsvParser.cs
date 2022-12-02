@@ -50,7 +50,6 @@
             string[] inputLines = input.Split("\n");
             string[] titles = inputLines[0].Split(";");
             return isValidTitles(scheme, titles) && isValidData(scheme, inputLines);
-
         }
 
         private static bool isValidData(TableScheme scheme, string[] inputLines)
