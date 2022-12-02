@@ -2,25 +2,22 @@
 {
     public class Table
     {
-        public string Name { get; }
+        public string Name { get; private set; }
 
-        public List<Row> Rows { get; }
+        public List<Row> Rows { get; private set; }
 
-        public Table(TableScheme scheme, string csv)
+        public TableScheme Scheme { get; private set; }
+
+        public Table(TableScheme scheme)
         {
             Name = scheme.TableName;
-            Rows = CsvParser.ParseCsv(csv, scheme);
+            Scheme = scheme;
+            Rows = new List<Row>();
         }
 
-        public void Print(int count, List<Table> tables)
+        public void ReadCsv(string csv)
         {
-            Console.WriteLine(Name);
-            Console.WriteLine();
-            foreach (var row in Rows)
-            {
-                row.Print(count, tables);
-            }
-            Console.WriteLine();
+            Rows = CsvParser.ParseCsv(csv, Scheme);
         }
 
         public static Table GetTableByName(string name, List<Table> tables)
@@ -54,7 +51,6 @@
             }
             throw new ArgumentException($"Неизвестный элемент таблицы");
         }
-
     }
 
     public class Row
@@ -65,34 +61,5 @@
         {
             Data = new Dictionary<Column, object>();
         }
-
-        private static void CreateTab(int count)
-        {
-            for (int i = 0; i < count; i++)
-            {
-                Console.Write("\t");
-            }
-        }
-
-        public void Print(int count, List<Table> tables)
-        {
-            foreach (var data in Data)
-            {
-                if (data.Key.ReferencedTable != null)
-                {
-                    Console.WriteLine($"{data.Key.Name}:");
-                    Table refTable = Table.GetTableByName(data.Key.ReferencedTable, tables);
-                    CreateTab(count);
-                    refTable.GetElement((int)data.Value).Print(count + 1, tables);
-                }
-                else
-                {
-                    CreateTab(count);
-                    Console.WriteLine($"{data.Key.Name}:{data.Value}");
-                }
-            }
-            Console.WriteLine();
-        }
     }
-
 }
